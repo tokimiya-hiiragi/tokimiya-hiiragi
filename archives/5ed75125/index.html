@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next muse" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+
+
+
+
+  <meta name="keywords" content="javascript,Vue,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近在踩vue的坑，记录一下自己项目中使用的总结。">
+<meta name="keywords" content="javascript,Vue">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vue+element UI+vue-i18n 页面多语言和表单验证优化">
+<meta property="og:url" content="https://tokimiya-hiiragi.github.io/archives/5ed75125/index.html">
+<meta property="og:site_name" content="Raining in the Dream">
+<meta property="og:description" content="最近在踩vue的坑，记录一下自己项目中使用的总结。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://tokimiya-hiiragi.github.io/images/blog/20180214.png">
+<meta property="og:updated_time" content="2019-02-14T11:18:04.729Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="vue+element UI+vue-i18n 页面多语言和表单验证优化">
+<meta name="twitter:description" content="最近在踩vue的坑，记录一下自己项目中使用的总结。">
+<meta name="twitter:image" content="https://tokimiya-hiiragi.github.io/images/blog/20180214.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://tokimiya-hiiragi.github.io/archives/5ed75125/">
+
+
+
+
+
+  <title>vue+element UI+vue-i18n 页面多语言和表单验证优化 | Raining in the Dream</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+         <span class="site-title">To say goodbye is to die a little</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i>
+            
+            <span>首页</span>
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i>
+            
+            <span>关于</span>
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i>
+            
+            <span>标签</span>
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i>
+            
+            <span>分类</span>
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i>
+            
+            <span>归档</span>
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://tokimiya-hiiragi.github.io/archives/5ed75125/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="時宮柊">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Raining in the Dream">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">vue+element UI+vue-i18n 页面多语言和表单验证优化</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于: 2019-02-14 19:39:46" itemprop="dateCreated datePublished" datetime="2019-02-14T19:39:46+08:00">
+                2019-02-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/work/" itemprop="url" rel="index">
+                    <span itemprop="name">work</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/archives/5ed75125/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/archives/5ed75125/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/archives/5ed75125/" class="leancloud_visitors" data-flag-title="vue+element UI+vue-i18n 页面多语言和表单验证优化">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.8k 字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  8 分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近在踩vue的坑，记录一下自己项目中使用的总结。<br><a id="more"></a></p>
+<h1 id="版本说明"><a href="#版本说明" class="headerlink" title="版本说明"></a>版本说明</h1><p>本文中使用模块版本如下，不保证代码对其他版本的适用。<br><code>vue: 2.5.2</code><br><code>element-ui: 2.4.11</code><br><code>vue-i18n: 8.8.0</code><br><code>lodash: 4.17.11</code></p>
+<h1 id="1-多语言"><a href="#1-多语言" class="headerlink" title="1. 多语言"></a>1. 多语言</h1><p>使用<a href="https://kazupon.github.io/vue-i18n/" target="_blank" rel="noopener">vue-i18n</a>对项目进行国际化，</p>
+<h2 id="1-npm安装："><a href="#1-npm安装：" class="headerlink" title="1. npm安装："></a>1. npm安装：</h2><p><code>npm i --save-dev vue-i18n</code></p>
+<h2 id="2-项目中添加语言包："><a href="#2-项目中添加语言包：" class="headerlink" title="2. 项目中添加语言包："></a>2. 项目中添加语言包：</h2><p><img src="/images/blog/20180214.png" style="margin:0"><br>语言包写法可类似如下格式<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> lang = &#123;</span><br><span class="line">  user: &#123;</span><br><span class="line">    login: <span class="string">'登录'</span>,</span><br><span class="line">    username: <span class="string">'用户名'</span>,</span><br><span class="line">    password: <span class="string">'密码'</span>,</span><br><span class="line">    registerInfo: <span class="string">'还没有账号？点击注册'</span>,</span><br><span class="line">    loginInfo: <span class="string">'欢迎！'</span>,</span><br><span class="line">    register: <span class="string">'注册账号'</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h2 id="3-main-js文件中引入，并在页面初始化时默认使用中文："><a href="#3-main-js文件中引入，并在页面初始化时默认使用中文：" class="headerlink" title="3. main.js文件中引入，并在页面初始化时默认使用中文："></a>3. main.js文件中引入，并在页面初始化时默认使用中文：</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> VueI18n <span class="keyword">from</span> <span class="string">'vue-i18n'</span></span><br><span class="line">Vue.use(VueI18n);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> DEFAULT_LANG = <span class="string">'zh-CN'</span>;</span><br><span class="line"><span class="keyword">const</span> i18n = <span class="keyword">new</span> VueI18n(&#123;</span><br><span class="line">  locale: DEFAULT_LANG,</span><br><span class="line">  messages: &#123;</span><br><span class="line">    <span class="string">'zh-CN'</span>: <span class="built_in">require</span>(<span class="string">'./lang/zh'</span>),</span><br><span class="line">    <span class="string">'en-US'</span>: <span class="built_in">require</span>(<span class="string">'./lang/en'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#app'</span>,</span><br><span class="line">  router,</span><br><span class="line">  store,</span><br><span class="line">  i18n,</span><br><span class="line">  components: &#123; App &#125;,</span><br><span class="line">  template: <span class="string">'&lt;App/&gt;'</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="4-使用多语言语言包"><a href="#4-使用多语言语言包" class="headerlink" title="4. 使用多语言语言包"></a>4. 使用多语言语言包</h2><ul>
+<li><p>html页面中直接引用：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h1</span> <span class="attr">class</span>=<span class="string">"text-center"</span>&gt;</span>&#123;&#123;$t('lang.user.loginInfo')&#125;&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>html页面中使用v-bind方法引用：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">el-input</span> <span class="attr">v-model</span>=<span class="string">"loginForm.username"</span> <span class="attr">:placeholder</span>=<span class="string">"$t('lang.user.username')"</span> <span class="attr">class</span>=<span class="string">"with-icon-input"</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">"fa fa-user"</span> <span class="attr">slot</span>=<span class="string">"prefix"</span> <span class="attr">style</span>=<span class="string">"margin-left:5px"</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">el-input</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>js页面中引用：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.$i18n.t(<span class="string">'lang.form.userName'</span>)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="5-切换语言"><a href="#5-切换语言" class="headerlink" title="5. 切换语言"></a>5. 切换语言</h2><p>在header导航栏初始化时检测浏览器localStorage中是否存有lang数据，若没有，则默认初始化为中文。并在页面中添加切换语言的方法。<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">el-submenu</span> <span class="attr">index</span>=<span class="string">"6"</span> <span class="attr">class</span>=<span class="string">"header-nav-item"</span> <span class="attr">style</span>=<span class="string">"float:right"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">template</span> <span class="attr">slot</span>=<span class="string">"title"</span>&gt;</span><span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">"fa fa-language"</span>&gt;</span><span class="tag">&lt;<span class="name">span</span>&gt;</span>&#123;&#123;$t('lang.nav.lang')&#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">el-menu-item</span> <span class="attr">index</span>=<span class="string">"6-1"</span> @<span class="attr">click</span>=<span class="string">"changeLang('zh')"</span>&gt;</span>中文<span class="tag">&lt;/<span class="name">el-menu-item</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">el-menu-item</span> <span class="attr">index</span>=<span class="string">"6-2"</span> @<span class="attr">click</span>=<span class="string">"changeLang('en')"</span>&gt;</span>English<span class="tag">&lt;/<span class="name">el-menu-item</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">el-submenu</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    name: <span class="string">"HeadNav"</span>,</span><br><span class="line">    data() &#123;</span><br><span class="line">      <span class="keyword">return</span> &#123;&#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    mounted() &#123;</span><br><span class="line">      <span class="keyword">if</span> (!<span class="built_in">window</span>.localStorage.getItem(<span class="string">'lang'</span>)) &#123;</span><br><span class="line">        <span class="built_in">window</span>.localStorage.setItem(<span class="string">'lang'</span>, <span class="string">'zh-CN'</span>);</span><br><span class="line">        <span class="keyword">this</span>.$i18n.locale = <span class="string">'zh-CN'</span></span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.$i18n.locale = <span class="built_in">window</span>.localStorage.getItem(<span class="string">'lang'</span>)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    methods: &#123;</span><br><span class="line">      changeLang: <span class="function"><span class="keyword">function</span> (<span class="params">lang</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (lang === <span class="string">'zh'</span>) &#123;</span><br><span class="line">            <span class="built_in">window</span>.localStorage.setItem(<span class="string">'lang'</span>, <span class="string">'zh-CN'</span>)</span><br><span class="line">            <span class="keyword">this</span>.$i18n.locale = <span class="string">'zh-CN'</span></span><br><span class="line">          &#125; <span class="keyword">else</span> <span class="keyword">if</span> (lang === <span class="string">'en'</span>) &#123;</span><br><span class="line">            <span class="built_in">window</span>.localStorage.setItem(<span class="string">'lang'</span>, <span class="string">'en-US'</span>)</span><br><span class="line">            <span class="keyword">this</span>.$i18n.locale = <span class="string">'en-US'</span></span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="2-表单验证封装"><a href="#2-表单验证封装" class="headerlink" title="2. 表单验证封装"></a>2. 表单验证封装</h1><p>element UI使用的表单验证框架为<a href="https://github.com/yiminghe/async-validator" target="_blank" rel="noopener">async-validator</a>，所以可以参考文档直接将多个组件共用的表单验证封装为一个js文件。<br>formValid.js:<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  text : <span class="function">(<span class="params">rule, value, callback</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!value) &#123;</span><br><span class="line">      <span class="keyword">return</span> callback(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'不能为空'</span>));</span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">      callback()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>全局引入：</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> formValid <span class="keyword">from</span> <span class="string">'./config/formValid'</span></span><br><span class="line">Vue.prototype.formValid = formValid;</span><br></pre></td></tr></table></figure>
+<p>此时可以直接在vue文件中直接使用this.formValid指向表单验证。</p>
+<ul>
+<li>单页面引入：</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> formValid <span class="keyword">from</span> <span class="string">'../config/formValid'</span></span><br></pre></td></tr></table></figure>
+<p>此时使用则不需要this，可直接使用formValid。</p>
+<p>使用封装的表单验证：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    data() &#123;</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        loginForm: &#123;</span><br><span class="line">          username: <span class="string">''</span>,</span><br><span class="line">          password: <span class="string">''</span></span><br><span class="line">        &#125;,</span><br><span class="line">        rules: &#123;</span><br><span class="line">          username: [&#123;<span class="attr">validator</span>: <span class="keyword">this</span>.formValid.text&#125;],</span><br><span class="line">          password:[&#123;<span class="attr">validator</span>: <span class="keyword">this</span>.formValid.text&#125;]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="3-表单验证的多语言和优化"><a href="#3-表单验证的多语言和优化" class="headerlink" title="3.表单验证的多语言和优化"></a>3.表单验证的多语言和优化</h1><h2 id="1-多语言-1"><a href="#1-多语言-1" class="headerlink" title="1.多语言"></a>1.多语言</h2><p>因为<a href="https://github.com/yiminghe/async-validator" target="_blank" rel="noopener">async-validator</a>验证并不支持多语言，所以无法直接使用 <code>message: this.$i18n.t(&#39;lang.form.userName&#39;)</code> 来切换表单验证提示。这里我的解决方法是在formValid.js中使用变量作为提示信息，并在切换语言时添加派发事件，在formValid.js中监听事件来切换语言。<br>这个方法有一个问题是，无法即时修改提示语言，只能再次触发时才会修改。所以只能在切换语言时刷新页面，此时需要添加提示，使用户清楚切换语言后会清空未提交的表单。</p>
+<h3 id="1-在语言包中添加多语言的提示信息"><a href="#1-在语言包中添加多语言的提示信息" class="headerlink" title="1.在语言包中添加多语言的提示信息"></a>1.在语言包中添加多语言的提示信息</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> lang &#123;</span><br><span class="line">  nav: &#123;</span><br><span class="line">    home: <span class="string">'首页'</span>,</span><br><span class="line">    lang: <span class="string">'多语言'</span>,</span><br><span class="line">    changeLang: <span class="string">'切换语言后会清空未提交的表单，确认切换？'</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  tip:&#123;</span><br><span class="line">    prompt: <span class="string">'提示'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  button:&#123;</span><br><span class="line">    confirm: <span class="string">'确认'</span>,</span><br><span class="line">    cancel: <span class="string">'取消'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  form: &#123;</span><br><span class="line">    text: <span class="string">'不能为空'</span>,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-修改切换语言方法，添加事件发送和页面刷新"><a href="#2-修改切换语言方法，添加事件发送和页面刷新" class="headerlink" title="2.修改切换语言方法，添加事件发送和页面刷新"></a>2.修改切换语言方法，添加事件发送和页面刷新</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">methods: &#123;</span><br><span class="line">      changeLang: <span class="function"><span class="keyword">function</span> (<span class="params">lang</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">let</span> originalSetItem = localStorage.setItem;</span><br><span class="line">        <span class="built_in">window</span>.localStorage.setItem = <span class="function"><span class="keyword">function</span> (<span class="params">key,newValue</span>) </span>&#123;</span><br><span class="line">          <span class="keyword">let</span> setItemEvent = <span class="keyword">new</span> Event(<span class="string">'setItemEvent'</span>);</span><br><span class="line">          setItemEvent.newValue = newValue;</span><br><span class="line">          <span class="built_in">window</span>.dispatchEvent(setItemEvent);</span><br><span class="line">          originalSetItem.apply(<span class="keyword">this</span>,<span class="built_in">arguments</span>);</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="keyword">this</span>.$confirm(<span class="keyword">this</span>.$i18n.t(<span class="string">'lang.nav.changeLang'</span>),<span class="keyword">this</span>.$i18n.t(<span class="string">'lang.tip.prompt'</span>),&#123;</span><br><span class="line">          confirmButtonText: <span class="keyword">this</span>.$i18n.t(<span class="string">'lang.button.confirm'</span>),</span><br><span class="line">          cancelButtonText: <span class="keyword">this</span>.$i18n.t(<span class="string">'lang.button.cancel'</span>),</span><br><span class="line">          type: <span class="string">'warning'</span></span><br><span class="line">        &#125;).then(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">          <span class="keyword">if</span> (lang === <span class="string">'zh'</span>) &#123;</span><br><span class="line">            <span class="built_in">window</span>.localStorage.setItem(<span class="string">'lang'</span>, <span class="string">'zh-CN'</span>)</span><br><span class="line">            <span class="keyword">this</span>.$i18n.locale = <span class="string">'zh-CN'</span></span><br><span class="line">          &#125; <span class="keyword">else</span> <span class="keyword">if</span> (lang === <span class="string">'en'</span>) &#123;</span><br><span class="line">            <span class="built_in">window</span>.localStorage.setItem(<span class="string">'lang'</span>, <span class="string">'en-US'</span>)</span><br><span class="line">            <span class="keyword">this</span>.$i18n.locale = <span class="string">'en-US'</span></span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">this</span>.newPage()</span><br><span class="line">        &#125;).catch(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line"></span><br><span class="line">        &#125;)</span><br><span class="line">      &#125;,</span><br><span class="line">      newPage: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">let</span> NewPage = <span class="string">'_empty'</span> + <span class="string">'?time='</span> + <span class="keyword">new</span> <span class="built_in">Date</span>().getTime()/<span class="number">1000</span></span><br><span class="line">        <span class="comment">// 之后将页面push进去</span></span><br><span class="line">        <span class="keyword">this</span>.$router.push(NewPage);</span><br><span class="line">        <span class="comment">// 再次返回上一页即可</span></span><br><span class="line">        <span class="keyword">this</span>.$router.go(<span class="number">-1</span>);</span><br><span class="line">      &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-修改formValid-js文件，添加多语言引入和事件监听"><a href="#3-修改formValid-js文件，添加多语言引入和事件监听" class="headerlink" title="3.修改formValid.js文件，添加多语言引入和事件监听"></a>3.修改formValid.js文件，添加多语言引入和事件监听</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> message;</span><br><span class="line"><span class="keyword">let</span> zhForm = <span class="built_in">require</span>(<span class="string">'../lang/zh'</span>).lang.form;</span><br><span class="line"><span class="keyword">let</span> enForm = <span class="built_in">require</span>(<span class="string">'../lang/en'</span>).lang.form</span><br><span class="line"><span class="keyword">if</span> (!<span class="built_in">window</span>.localStorage.getItem(<span class="string">'lang'</span>) || <span class="built_in">window</span>.localStorage.getItem(<span class="string">'lang'</span>) === <span class="string">'zh-CN'</span>) &#123;</span><br><span class="line">  message = zhForm</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  message = enForm</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">"setItemEvent"</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (e.newValue === <span class="string">'zh-CN'</span>) &#123;</span><br><span class="line">    message = zhForm</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    message = enForm</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  text: <span class="function">(<span class="params">rule, value, callback</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!value) &#123;</span><br><span class="line">      <span class="keyword">return</span> callback(<span class="keyword">new</span> <span class="built_in">Error</span>(message.text));</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      callback()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-表单验证优化"><a href="#2-表单验证优化" class="headerlink" title="2.表单验证优化"></a>2.表单验证优化</h2><p><a href="https://element.eleme.io/#/zh-CN/component/form" target="_blank" rel="noopener">element UI</a>的官方文档中使用表单验证均为点击提交后再进行验证，这种验证使用较方便，但是刚从Angularjs转来Vue，还是很怀念Angularjs直接监听input修改来进行校验的功能，所以就想还原一下Angularjs的表单验证。</p>
+<h3 id="1-将提交按钮初始化为disabled，并添加一个变量来检测表单是否修改过："><a href="#1-将提交按钮初始化为disabled，并添加一个变量来检测表单是否修改过：" class="headerlink" title="1.将提交按钮初始化为disabled，并添加一个变量来检测表单是否修改过："></a>1.将提交按钮初始化为disabled，并添加一个变量来检测表单是否修改过：</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">el-button</span> <span class="attr">type</span>=<span class="string">"primary"</span> <span class="attr">style</span>=<span class="string">"width:100%"</span> @<span class="attr">click</span>=<span class="string">""</span> <span class="attr">:disabled</span>=<span class="string">"formInvalid"</span>&gt;</span>&#123;&#123;$t('lang.user.login')&#125;&#125;<span class="tag">&lt;/<span class="name">el-button</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    data()&#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">        formInvalid: <span class="literal">true</span>,</span><br><span class="line">        formTrigger: <span class="literal">false</span>,</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-表单的输入框添加-input-监听输入修改："><a href="#2-表单的输入框添加-input-监听输入修改：" class="headerlink" title="2.表单的输入框添加 @input 监听输入修改："></a>2.表单的输入框添加 <code>@input</code> 监听输入修改：</h3><p><strong>注意：</strong> 和Angularjs中的<code>ng-change</code>方法不同，vue中<code>@change</code>方法仅能在输入框blur时才会执行。<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">el-form-item</span> <span class="attr">prop</span>=<span class="string">"username"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">el-input</span> <span class="attr">v-model</span>=<span class="string">"loginForm.username"</span> <span class="attr">:placeholder</span>=<span class="string">"$t('lang.user.username')"</span> <span class="attr">class</span>=<span class="string">"with-icon-input"</span> @<span class="attr">input</span>=<span class="string">"formChange()"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">"fa fa-user"</span> <span class="attr">slot</span>=<span class="string">"prefix"</span> <span class="attr">style</span>=<span class="string">"margin-left:5px"</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">el-input</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">el-form-item</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">el-form-item</span> <span class="attr">prop</span>=<span class="string">"password"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">el-input</span> <span class="attr">v-model</span>=<span class="string">"loginForm.password"</span> <span class="attr">:placeholder</span>=<span class="string">"$t('lang.user.password')"</span> <span class="attr">type</span>=<span class="string">"password"</span> <span class="attr">class</span>=<span class="string">"with-icon-input"</span> @<span class="attr">input</span>=<span class="string">"formChange()"</span>&gt;</span>&gt;</span><br><span class="line">        <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">"fa fa-lock"</span> <span class="attr">slot</span>=<span class="string">"prefix"</span> <span class="attr">style</span>=<span class="string">"margin-left:5px"</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">el-input</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">el-form-item</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="3-添加监听方法："><a href="#3-添加监听方法：" class="headerlink" title="3.添加监听方法："></a>3.添加监听方法：</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">methods: &#123;</span><br><span class="line">    formChange: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> <span class="keyword">this</span>.loginForm) &#123;</span><br><span class="line">          <span class="keyword">if</span> (!<span class="keyword">this</span>.formTrigger)&#123;</span><br><span class="line">            <span class="keyword">if</span> (!<span class="keyword">this</span>.loginForm[key])&#123;</span><br><span class="line">              <span class="keyword">return</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">this</span>.$refs[<span class="string">'loginForm'</span>].validate(<span class="function">(<span class="params">valid</span>)=&gt;</span>&#123;</span><br><span class="line">          <span class="keyword">this</span>.formTrigger = <span class="literal">true</span>;</span><br><span class="line">          <span class="keyword">if</span> (valid) &#123;</span><br><span class="line">            <span class="keyword">this</span>.formInvalid = <span class="literal">false</span></span><br><span class="line">          &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">this</span>.formInvalid = <span class="literal">true</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="引申"><a href="#引申" class="headerlink" title="引申"></a>引申</h1><p>在一些网站的用户注册时，会即时检测当前输入的用户名是否已经被注册过。此时就可以在输入改变时添加xhr请求，后台在数据库中查重。但是有时候用户输入会较快，若在每次输入改变后都发送一次请求，一则影响浏览器性能，二则会堆积很多pending请求中，此时异步返回数据并不能确认是哪次的请求。<br><strong>解决方法：</strong><br>在方法中添加防抖动，在用户停止输入一段时间后再执行请求：</p>
+<ol>
+<li>npm安装<br><code>npm i --save-dev lodash</code></li>
+<li>按需引入<br><code>import lodash from &#39;lodash&#39;</code></li>
+<li>方法中添加防抖：<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">formChange: lodash.debounce(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">//xhr请求</span></span><br><span class="line">&#125;,<span class="number">300</span>)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<hr>
+<div class="note default"><p>参考链接：<br><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/dispatchEvent" target="_blank" rel="noopener">https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/dispatchEvent</a></p></div>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+    
+      <div>
+        <ul class="post-copyright">
+<li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本文章采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处❤
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"><i class="fa fa-tag"></i> javascript</a>
+          
+            <a href="/tags/Vue/" rel="tag"><i class="fa fa-tag"></i> Vue</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/archives/2bff4037/" rel="next" title="解决Datatables自动生成的序号列样式偏移">
+                <i class="fa fa-chevron-left"></i> 解决Datatables自动生成的序号列样式偏移
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="時宮柊">
+            
+              <p class="site-author-name" itemprop="name">時宮柊</p>
+              <p class="site-description motion-element" itemprop="description">ただひたすらに、前へ</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/tokimiya-hiiragi" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#版本说明"><span class="nav-text">版本说明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-多语言"><span class="nav-text">1. 多语言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-npm安装："><span class="nav-text">1. npm安装：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-项目中添加语言包："><span class="nav-text">2. 项目中添加语言包：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-main-js文件中引入，并在页面初始化时默认使用中文："><span class="nav-text">3. main.js文件中引入，并在页面初始化时默认使用中文：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-使用多语言语言包"><span class="nav-text">4. 使用多语言语言包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-切换语言"><span class="nav-text">5. 切换语言</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-表单验证封装"><span class="nav-text">2. 表单验证封装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-表单验证的多语言和优化"><span class="nav-text">3.表单验证的多语言和优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-多语言-1"><span class="nav-text">1.多语言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-在语言包中添加多语言的提示信息"><span class="nav-text">1.在语言包中添加多语言的提示信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-修改切换语言方法，添加事件发送和页面刷新"><span class="nav-text">2.修改切换语言方法，添加事件发送和页面刷新</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-修改formValid-js文件，添加多语言引入和事件监听"><span class="nav-text">3.修改formValid.js文件，添加多语言引入和事件监听</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-表单验证优化"><span class="nav-text">2.表单验证优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-将提交按钮初始化为disabled，并添加一个变量来检测表单是否修改过："><span class="nav-text">1.将提交按钮初始化为disabled，并添加一个变量来检测表单是否修改过：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-表单的输入框添加-input-监听输入修改："><span class="nav-text">2.表单的输入框添加 @input 监听输入修改：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-添加监听方法："><span class="nav-text">3.添加监听方法：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#引申"><span class="nav-text">引申</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">時宮柊</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">2.8k</span>
+  
+</div>
+<!--
+
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+-->
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      
+      Hello，第
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      位访客
+      
+    </span>
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: true,
+        appId: 'BBrog6hL0Kf8BQDihKfjDDP4-gzGzoHsz',
+        appKey: 'xs80mn3y3DQAO4GlzDXBUvf1',
+        placeholder: 'ヾ(=ﾟ･ﾟ=)ﾉ喵♪ 留下邮箱你将会收到回复提醒',
+        avatar:'identicon',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("BBrog6hL0Kf8BQDihKfjDDP4-gzGzoHsz", "xs80mn3y3DQAO4GlzDXBUvf1");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
